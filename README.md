@@ -1,7 +1,6 @@
 This package provides a wrapper widget to animate borders around your widgets.
 You can choose to provide current Animation Progress externally or use an indefinitely animation.
-Screenshot# 01             |  Screenshot# 02             |  Screenshot# 03
-:-------------------------:|:-------------------------:|:-------------------------:
+
 <img src="https://raw.githubusercontent.com/saschTa/flutter_glowy_borders/main/example/assets/animated_border.gif" width="200"/> | <img src="https://raw.githubusercontent.com/saschTa/flutter_glowy_borders/main/example/assets/animated_border_circle.gif" width="200"/> | <img src="https://raw.githubusercontent.com/saschTa/flutter_glowy_borders/main/example/assets/animated_border_percentage.gif" width="200"/>
 
 ## Features
