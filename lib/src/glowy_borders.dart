@@ -15,7 +15,8 @@ import 'animated_gradient_container.dart';
 /// [borderRadius] should match the border radius of the child to make it look nice
 /// [animationProgress] if != null, the gradient will rotate towards its destination. Value between 0..1
 /// [child] content does not get blurred, is surrounded by the glowing border
-///
+/// [stretchAlongAxis] use if you place this widget inside column or row with stretch alignment
+/// [stretchAxis] choose depending on row or column
 class AnimatedGradientBorder extends StatefulWidget {
   const AnimatedGradientBorder(
       {super.key,
@@ -25,7 +26,9 @@ class AnimatedGradientBorder extends StatefulWidget {
       this.animationTime,
       this.borderSize,
       this.glowSize,
-      this.animationProgress});
+      this.animationProgress,
+      this.stretchAlongAxis = false,
+      this.stretchAxis = Axis.horizontal});
 
   final Widget child;
   final double? borderSize;
@@ -34,6 +37,8 @@ class AnimatedGradientBorder extends StatefulWidget {
   final BorderRadiusGeometry borderRadius;
   final int? animationTime;
   final double? animationProgress;
+  final bool stretchAlongAxis;
+  final Axis stretchAxis;
 
   @override
   State<StatefulWidget> createState() => AnimatedGradientState();
@@ -76,32 +81,49 @@ class AnimatedGradientState extends State<AnimatedGradientBorder> with SingleTic
   @override
   Widget build(BuildContext context) {
     final negativeMargin = -1.0 * (widget.borderSize ?? 0);
-    return Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
-      Positioned(
-          top: negativeMargin,
-          right: negativeMargin,
-          left: negativeMargin,
-          bottom: negativeMargin,
-          child: AnimatedGradientContainer(
-            gradientColors: widget.gradientColors,
-            borderRadius: widget.borderRadius,
-            gradientAngle: _angleAnimation.value,
-          )),
-      BackdropFilter(
+    return Container(
+      padding: EdgeInsets.all((widget.glowSize ?? 5) * 3 + (widget.borderSize ?? 0) * 3),
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(borderRadius: widget.borderRadius),
+      child: Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+        Positioned(
+            top: negativeMargin,
+            left: negativeMargin,
+            right: negativeMargin,
+            bottom: negativeMargin,
+            child: AnimatedGradientContainer(
+              gradientColors: widget.gradientColors,
+              borderRadius: widget.borderRadius,
+              gradientAngle: _angleAnimation.value,
+            )),
+        BackdropFilter(
           filter: ImageFilter.blur(sigmaX: widget.glowSize ?? 0, sigmaY: widget.glowSize ?? 0),
-          child: Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
-            Positioned(
-                top: negativeMargin,
-                right: negativeMargin,
-                left: negativeMargin,
-                bottom: negativeMargin,
-                child: AnimatedGradientContainer(
-                  gradientColors: widget.gradientColors,
-                  borderRadius: widget.borderRadius,
-                  gradientAngle: _angleAnimation.value,
-                )),
-            widget.child
-          ])),
-    ]);
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                  top: negativeMargin,
+                  right: negativeMargin,
+                  left: negativeMargin,
+                  bottom: negativeMargin,
+                  child: AnimatedGradientContainer(
+                    gradientColors: widget.gradientColors,
+                    borderRadius: widget.borderRadius,
+                    gradientAngle: _angleAnimation.value,
+                  )),
+              if (widget.stretchAlongAxis)
+                SizedBox(
+                  width: widget.stretchAxis == Axis.horizontal ? double.infinity : null,
+                  height: widget.stretchAxis == Axis.vertical ? double.infinity : null,
+                  child: widget.child,
+                )
+              else
+                widget.child,
+            ],
+          ),
+        ),
+      ]),
+    );
   }
 }

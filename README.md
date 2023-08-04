@@ -25,29 +25,55 @@ If you remove it or set it to `null`, the animation will play indefinitely.
 `Please Note that you will need to set the same border radius for the wrapper as well as the child to
 make it look like a true border.`
 
+`Also note, that this widget will not work in stretched alignments if you don't provide the parameter
+stretchAlongAxis and specify which axis you want to stretch along`
+
 ```dart
 
-const widget = AnimatedGradientBorder(
-  borderSize: 1,
-  glowSize: 60,
-  gradientColors: [Colors.black, Colors.black, Colors.black, Colors.purple.shade50],
-  animationProgress: currentProgress,
-  borderRadius: BorderRadius.all(Radius.circular(2)),
-  child: Container(
-    width: 300,
-    height: 300,
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(2)),
-        color: Theme
-            .of(context)
-            .colorScheme
-            .secondaryContainer),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("current value: $currentProgress",
-            style: TextStyle(color: Colors.white, fontSize: 30.0)),
-      ],
+final widget = Scaffold(
+  extendBody: true,
+  body: SafeArea(
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Column(
+            children: [Text('Hallo Welt')],
+          ),
+          AnimatedGradientBorder(
+            borderSize: 2,
+            glowSize: 10,
+            gradientColors: [
+              Colors.transparent,
+              Colors.transparent,
+              Colors.transparent,
+              Colors.purple.shade50
+            ],
+            animationProgress: currentProgress,
+            borderRadius: BorderRadius.all(Radius.circular(999)),
+            child: SizedBox(
+              width: 300,
+              height: 300,
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(999)),
+                    color: Theme
+                        .of(context)
+                        .colorScheme
+                        .secondaryContainer),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("current value: $currentProgress",
+                        style: TextStyle(color: Colors.white, fontSize: 30.0)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   ),
 );
